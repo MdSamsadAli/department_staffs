@@ -12,11 +12,13 @@ class StaffModel extends CI_Model
         $qeury = $this->db->insert('staffs', $data);
         return $qeury;
     }
-    // function get()
-    // {
-    //     $qeury = $this->db->get('staffs');
-    //     return $qeury->result_array();
-    // }
+
+    // for admin 
+    function get()
+    {
+        $qeury = $this->db->get('staffs');
+        return $qeury->result();
+    }
 
     public function getStaffWithDepartment() {
         $this->db->select('staffs.*, departments.department_name');
@@ -54,5 +56,11 @@ class StaffModel extends CI_Model
         $id = $this->input->post('id');
         $qeury = $this->db->where('id', $id)->delete('staffs');
         return $qeury;
+    }
+
+    public function getByDepartmentId($departmentId) {
+        $this->db->where('department_id', $departmentId);
+        $query = $this->db->get('staffs');
+        return $query->result();
     }
 }

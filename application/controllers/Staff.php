@@ -19,7 +19,6 @@ class Staff extends CI_Controller
         $data = $this->staffs->getStaffWithDepartment();
         echo json_encode($data);
     }
-
     
     function editStaff()
     {

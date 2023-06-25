@@ -19,6 +19,10 @@
         Department
       </a>
 
+      <a type="button" class="btn btn-primary" href='<?php base_url() ?>admin' >
+        Admin
+      </a>
+
       <table class="table">
         <thead>
           <tr>

@@ -3,24 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Department Info</title>
-    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <title>Admin Info</title>
+    <script src="assets/js/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   </head>
   <body>
     <div class="container">
       
-      <a type="button" class="btn btn-primary" href='<?php base_url() ?>admin' >
-        Admin
-      </a>
-
-      <a type="button" class="btn btn-primary" href='<?php base_url() ?>staff' >
-        Staff
-      </a>
-      
       <!-- Button trigger modal -->
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="showForm">
-        add department
+        add
       </button> 
 
       <table class="table">
@@ -28,6 +20,10 @@
           <tr>
             <th scope="col">Sno</th>
             <th scope="col">Department</th>
+            <th scope="col">Staff</th>
+            <th scope="col">Status</th>
+            <th scope="col">Address</th>
+            <th scope="col">Salary</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -48,7 +44,20 @@
             <div class="row">
               <div class="col">
                 <input type="hidden" class="form-control" placeholder="Id" aria-label="id"  id="id">
-                <input type="text" class="form-control" placeholder="Department" aria-label="First name"  id="department_name">
+                <select name="department" id="department_name" class="form-control">
+                    <option value="">Select Department</option>
+                    <?php foreach ($department as $department): ?>
+                        <option value="<?= $department->id ?>"><?= $department->department_name ?></option>
+                    <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="col">
+                <select class="form-control" name="staff"  id="staff_name" disabled>
+                  <option value="">Select Staff</option>
+                  <?php foreach ($staffs as $staff) : ?>
+                    <option value="<?= $staff->id ?>"><?= $staff->staff_name ?></option>
+                    <?php endforeach; ?>
+                </select>
               </div>
             </div>
           </div>
@@ -59,8 +68,8 @@
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script>
+    <script src="assets/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <!-- <script>
         $(document).ready(function(){
 
             $(document).on("click", '#showForm', function(){
@@ -153,6 +162,36 @@
                 }
             })
         })
-    </script>
+    </script> -->
   </body>
 </html>
+
+<script>
+  $(document).ready(function() {
+    $('#department_name').change(function() {
+      var departmentId = $(this).val();
+
+      alert(departmentId);
+      
+      if (departmentId !== '') {
+        $.ajax({
+          url: '<?php base_url()?> admin/getstaffbydepartment', // Replace with the actual URL or PHP file that handles the AJAX request
+          type: 'POST',
+          data: { departmentId: departmentId },
+          dataType: 'json',
+          success: function(response) {
+            $('#staff_name').prop('disabled', false);
+            $('#staff_name').html('<option value="">Select Staff</option>');
+
+            $.each(response, function(index, staff) {
+              $('#staff_name').append('<option value="' + staff.id + '">' + staff.staff_name + '</option>');
+            });
+          }
+        });
+      } else {
+        $('#staff_name').prop('disabled', true);
+        $('#staff_name').html('<option value="">Select Staff</option>');
+      }
+    });
+  });
+</script>

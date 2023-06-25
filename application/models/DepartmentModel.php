@@ -15,6 +15,7 @@ class DepartmentModel extends CI_Model
     function get()
     {
         $qeury = $this->db->get('departments');
+        // echo $this->db->last_query();
         return $qeury->result();
     }
     function edit()
