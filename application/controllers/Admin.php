@@ -26,7 +26,26 @@ class Admin extends CI_Controller
 
         // Return the staff data as JSON
         echo json_encode($staffList);
+    }
 
-
+    function store()
+    {
+        $data = $this->admin->insert();
+        echo json_encode($data);
+    }
+    function get()
+    {
+        $data = $this->admin->get();
+        echo json_encode($data);
+    }
+    function edit()
+    {
+        $data = $this->admin->getSingle();
+        echo json_encode($data);
+    }
+    function destroy()
+    {
+        $data = $this->admin->delete();
+        echo json_encode($data);
     }
 }

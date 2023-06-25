@@ -59,6 +59,16 @@
                     <?php endforeach; ?>
                 </select>
               </div>
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Salary" aria-label="Last name" id="salary">
+              </div>
+              <div class="col">
+                <select name="status" id="status" class="form-control">
+                  <option value="0">Select Status</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">InActive</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -69,7 +79,7 @@
     </div>
 
     <script src="assets/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <!-- <script>
+    <script>
         $(document).ready(function(){
 
             $(document).on("click", '#showForm', function(){
@@ -82,26 +92,29 @@
 
 
             var id = $("#id").val();
-            var addUpdate = (id == "" ) ? "<?php base_url(); ?>department/insert" : "<?php base_url(); ?>department/updateDepartment";
-                var department_name = $('#department_name').val();
+            var addUpdate = (id == "" ) ? "<?php base_url(); ?>admin/store" : "<?php base_url(); ?>admin/update";
+                var department_id = $('#department_name').val();
+                var staff_id = $('#staff_name').val();
+                var salary = $('#salary').val();
+                var status = $('#status').val();
 
                 $.ajax({
                     url: addUpdate,
-                    data: {id, department_name},
+                    data: {id, department_id, staff_id, salary, status},
                     dataType: 'json',
                     type: 'POST',
                     success: function(data){
                         console.log(data);
-                        getDepartments();
+                        fetchData();
                         $("#staticBackdrop").modal("hide");
                     }
                 })
         });
 
-        function getDepartments()
+        function fetchData()
         {
             $.ajax({
-                url: '<?php base_url(); ?>department/getDepartments',
+                url: '<?php base_url(); ?>admin/get',
                 dataType: 'json',
                 type: 'POST',
                 success: function(data){
@@ -114,9 +127,13 @@
                         tbody += "<tr>";
                         tbody += "<td>" +id++;+ "</td>";
                         tbody += "<td>" +data[key]['department_name']+ "</td>";
+                        tbody += "<td>" +data[key]['staff_name']+ "</td>";
+                        tbody += "<td>" +data[key]['status']+ "</td>";
+                        tbody += "<td>" +data[key]['address']+ "</td>";
+                        tbody += "<td>" +data[key]['salary']+ "</td>";
                         tbody += `<td>
-                            <button type="button" class="btn btn-secondary btn-sm" value="${data[key]['id']}" id="editDepartment">edit</button>
-                            <button type="button" class="btn btn-danger btn-sm" value="${data[key]['id']}" id="deleteDepartment">delete</button>
+                            <button type="button" class="btn btn-secondary btn-sm" value="${data[key]['id']}" id="editData">edit</button>
+                            <button type="button" class="btn btn-danger btn-sm" value="${data[key]['id']}" id="deleteData">delete</button>
                         </td>`;
 
                         tbody += "</tr>";
@@ -125,14 +142,14 @@
                 },
             })
         }
-        getDepartments();
+        fetchData();
 
-        $(document).on('click','#editDepartment', function(e){
+        $(document).on('click','#editData', function(e){
             e.preventDefault();
             var id = $(this).attr('value');
             alert(id);
             $.ajax({
-                url: "<?php base_url() ?>department/editDepartment",
+                url: "<?php base_url() ?>admin/edit",
                 dataType: 'json',
                 type: "POST",
                 data: {id},
@@ -140,7 +157,10 @@
                     console.log(data);
 
                     $("#id").val(data.id);
-                    $("#department_name").val(data.department_name);
+                    $("#department_name").val(data.department_id);
+                    $("#staff_name").val(data.staff_id);
+                    $("#salary").val(data.salary);
+                    $("#status").val(data.status);
 
                     $("#staticBackdrop").modal("show");
                 }
@@ -148,21 +168,21 @@
             
         });
 
-        $(document).on('click','#deleteDepartment', function(e){
+        $(document).on('click','#deleteData', function(e){
             e.preventDefault();
             var id = $(this).attr('value');
             $.ajax({
-                url: "<?php base_url() ?>department/destroy",
+                url: "<?php base_url() ?>admin/destroy",
                 dataType: 'json',
                 type: "POST",
                 data: {id},
                 success: function(data){
                     console.log(data);
-                    getDepartments();
+                    fetchData();
                 }
             })
         })
-    </script> -->
+    </script>
   </body>
 </html>
 
